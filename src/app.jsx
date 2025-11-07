@@ -8,6 +8,8 @@ import './app.css';
 function App() {
   const [cart, setCart] = useState([]);
 
+  
+
   const addToCart = (product) => {
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.id === product.id);
@@ -25,6 +27,16 @@ function App() {
   const removeFromCart = (productId) => {
     setCart(prevCart => prevCart.filter(item => item.id !== productId));
   };
+  const updateQuantity = (productId, newQuantity) => {
+  if (newQuantity < 1) return;
+  setCart(prevCart =>
+    prevCart.map(item =>
+      item.id === productId
+        ? { ...item, quantity: newQuantity }
+        : item
+    )
+  );
+};
 
   
   return (
@@ -36,7 +48,9 @@ function App() {
             <Route 
               path="/" 
               element={<ProductList addToCart={addToCart} />} 
+
             />
+            
             <Route 
               path="/cart" 
               element={
