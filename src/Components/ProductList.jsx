@@ -1,7 +1,9 @@
 import { useProducts } from '../hooks/useProducts';
 
-const ProductList = () => {
+
+const ProductList = ({ addToCart }) => {
   const { products, loading, error } = useProducts();
+
 
   if (loading) {
     return <div className="loading">Loading products...</div>;
