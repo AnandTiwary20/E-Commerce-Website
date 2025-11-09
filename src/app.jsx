@@ -5,6 +5,8 @@ import ProductList from './Components/ProductList';
 import Cart from './Components/Cart';
 import './app.css';
 
+import NotFound from './Components/NotFound';
+
 function App() {
   const [cart, setCart] = useState([]);
 
@@ -50,6 +52,7 @@ function App() {
               element={<ProductList addToCart={addToCart} />} 
 
             />
+            <Route path="*" element={<NotFound />} />
             
             <Route 
               path="/cart" 
