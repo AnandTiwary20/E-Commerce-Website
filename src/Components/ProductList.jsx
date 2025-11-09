@@ -2,6 +2,7 @@ import { useProducts } from '../hooks/useProducts';
 import { useCart } from '../app/hooks';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSearchQuery } from '../features/search/searchSlice';
+import '../styles/amazonGrid.css';
 
 const ProductList = () => {
   const { products, loading, error } = useProducts();
