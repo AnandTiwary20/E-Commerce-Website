@@ -1,6 +1,7 @@
 import { useProducts } from '../hooks/useProducts';
 import { useCart } from '../app/hooks';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { setSearchQuery } from '../features/search/searchSlice';
 import '../styles/amazonGrid.css';
 
@@ -9,6 +10,7 @@ const ProductList = () => {
   const { addToCart } = useCart();
   const searchQuery = useSelector((state) => state.search.searchQuery);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Filter products based on search query
   const filteredProducts = products.filter(product => 
@@ -144,11 +146,14 @@ const ProductList = () => {
               
               <button 
                 className="add-to-cart-btn"
-                onClick={() => addToCart({
-                  ...product,
-                  quantity: 1,
-                  totalPrice: product.price
-                })}
+                onClick={() => {
+                  addToCart({
+                    ...product,
+                    quantity: 1,
+                    totalPrice: product.price
+                  });
+                  navigate('/cart');
+                }}
                 disabled={product.stock === 0}
               >
                 Add to Cart
