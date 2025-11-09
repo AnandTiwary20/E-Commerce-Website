@@ -153,11 +153,6 @@ const ProductList = () => {
                 Add to Cart
               </button>
               
-              <div className="product-actions">
-                <button className="action-btn">Add to List</button>
-                <span className="divider">|</span>
-                <button className="action-btn">Add to Compare</button>
-              </div>
             </div>
           </div>
         )) ) : (
