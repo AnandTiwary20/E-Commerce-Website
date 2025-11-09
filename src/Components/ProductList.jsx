@@ -1,9 +1,23 @@
 import { useProducts } from '../hooks/useProducts';
 import { useCart } from '../app/hooks';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSearchQuery } from '../features/search/searchSlice';
 
 const ProductList = () => {
   const { products, loading, error } = useProducts();
   const { addToCart } = useCart();
+  const searchQuery = useSelector((state) => state.search.searchQuery);
+  const dispatch = useDispatch();
+
+  // Filter products based on search query
+  const filteredProducts = products.filter(product => 
+    product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    product.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleSearchChange = (e) => {
+    dispatch(setSearchQuery(e.target.value));
+  };
 
   if (loading) {
     return (
@@ -48,8 +62,27 @@ const ProductList = () => {
 
   return (
     <div className="amazon-container">
+      <div className="search-container" style={{ marginBottom: '20px', width: '100%', maxWidth: '1200px', margin: '0 auto 20px' }}>
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          style={{
+            width: '100%',
+            padding: '10px',
+            fontSize: '16px',
+            borderRadius: '4px',
+            border: '1px solid #ddd',
+            maxWidth: '500px',
+            display: 'block',
+            margin: '0 auto'
+          }}
+        />
+      </div>
       <div className="products-grid">
-        {products.map((product) => (
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
           <span key={product.id} className="product-card">
             <div className="product-image-container">
               <img 
@@ -127,7 +160,11 @@ const ProductList = () => {
               </div>
             </div>
           </span>
-        ))}
+        )) ) : (
+          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px' }}>
+            <p>No products found matching "{searchQuery}"</p>
+          </div>
+        )}
       </div>
     </div>
   );
