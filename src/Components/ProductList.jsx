@@ -62,7 +62,7 @@ const ProductList = () => {
 
   return (
     <div className="amazon-container">
-      <div className="search-container" style={{ marginBottom: '20px', width: '100%', maxWidth: '1200px', margin: '0 auto 20px' }}>
+      <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto 20px', padding: '0 20px' }}>
         <input
           type="text"
           placeholder="Search products..."
@@ -80,10 +80,10 @@ const ProductList = () => {
           }}
         />
       </div>
-      <div className="products-grid">
+      <div className="products-grid" style={{ margin: '0 auto', maxWidth: '100%', padding: '0 20px' }}>
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
-          <span key={product.id} className="product-card">
+          <div key={product.id} className="product-card" style={{ display: 'inline-block', float: 'none' }}>
             <div className="product-image-container">
               <img 
                 src={product.thumbnail} 
@@ -159,9 +159,9 @@ const ProductList = () => {
                 <button className="action-btn">Add to Compare</button>
               </div>
             </div>
-          </span>
+          </div>
         )) ) : (
-          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px' }}>
+          <div style={{ width: '100%', textAlign: 'center', padding: '40px' }}>
             <p>No products found matching "{searchQuery}"</p>
           </div>
         )}
