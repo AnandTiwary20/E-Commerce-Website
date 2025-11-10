@@ -1,92 +1,66 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react'
 
 const LazyImage = ({ src, alt, className, width, height, ...props }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [imageSrc, setImageSrc] = useState('');
-  const imgRef = useRef(null);
-  const observerRef = useRef(null);
+  const [loaded, setLoaded] = useState(false)
+  const [imgSrc, setImgSrc] = useState('')
+  const imgRef = useRef(null)
 
+  // load image only when visible on screen
   useEffect(() => {
-    if (!src) return;
+    if (!src) return
 
-    if ('IntersectionObserver' in window) {
-      
-      const handleIntersect = (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const img = new Image();
-            img.src = src;
-            img.onload = () => {
-              setImageSrc(src);
-              setIsLoading(false);
-            };
-            img.onerror = () => {
-              setImageSrc('https://via.placeholder.com/300x300?text=Image+Not+Found');
-              setIsLoading(false);
-            };
-            
-            if (observerRef.current) {
-              observerRef.current.disconnect();
-            }
-          }
-        });
-      };
-
-      observerRef.current = new IntersectionObserver(handleIntersect, {
-        rootMargin: '200px',
-        threshold: 0.01,
-      });
-
-      if (imgRef.current) {
-        observerRef.current.observe(imgRef.current);
-      }
-    } else {
-     
-      const img = new Image();
-      img.src = src;
+    const loadImage = () => {
+      const img = new Image()
+      img.src = src
       img.onload = () => {
-        setImageSrc(src);
-        setIsLoading(false);
-      };
+        setImgSrc(src)
+        setLoaded(true)
+      }
       img.onerror = () => {
-        setImageSrc('https://via.placeholder.com/300x300?text=Image+Not+Found');
-        setIsLoading(false);
-      };
+        setImgSrc('https://via.placeholder.com/300x300?text=Image+Not+Found')
+        setLoaded(true)
+      }
     }
 
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
-  }, [src]);
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            loadImage()
+            observer.disconnect()
+          }
+        },
+        { rootMargin: '150px' }
+      )
+      if (imgRef.current) observer.observe(imgRef.current)
+      return () => observer.disconnect()
+    } else {
+      loadImage()
+    }
+  }, [src])
 
   return (
-    <div 
+    <div
       ref={imgRef}
-      className={`lazy-image-container ${className || ''} ${isLoading ? 'loading' : ''}`}
+      className={`lazy-img-wrap ${className || ''} ${!loaded ? 'loading' : ''}`}
       style={{
-        '--width': width || '100%',
-        '--height': height || 'auto',
-        '--bg-color': isLoading ? '#f5f5f5' : 'transparent'
+        width: width || '100%',
+        height: height || 'auto',
+        background: !loaded ? '#f4f4f4' : 'transparent',
       }}
     >
-      {imageSrc && (
+      {imgSrc && (
         <img
-          src={imageSrc}
+          src={imgSrc}
           alt={alt || ''}
-          className={`lazy-image ${className || ''} ${isLoading ? 'loading' : ''}`}
+          className={`lazy-img ${className || ''}`}
           loading="lazy"
           {...props}
         />
       )}
-      {isLoading && (
-        <div className="image-placeholder">
-          <div className="loading-spinner"></div>
-        </div>
-      )}
+      {!loaded && <div className="spinner"></div>}
     </div>
-  );
-};
+  )
+}
 
-export default LazyImage;
+export default LazyImage
