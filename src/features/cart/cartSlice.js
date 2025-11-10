@@ -14,12 +14,17 @@ const cartSlice = createSlice({
       const newItem = action.payload;
       const existingItem = state.items.find((item) => item.id === newItem.id);
       
+      // Ensure we have the correct image URL (check both thumbnail and image properties)
+      const imageUrl = newItem.thumbnail || newItem.image || 'https://via.placeholder.com/100';
+      
       if (existingItem) {
         existingItem.quantity += newItem.quantity || 1;
         existingItem.totalPrice += (newItem.price * (newItem.quantity || 1));
       } else {
         state.items.push({
           ...newItem,
+          thumbnail: imageUrl, // Ensure thumbnail is set
+          image: imageUrl,     // Ensure image is set
           quantity: newItem.quantity || 1,
           totalPrice: newItem.price * (newItem.quantity || 1),
         });
