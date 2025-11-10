@@ -3,7 +3,7 @@ import { FiShoppingBag } from 'react-icons/fi';
 import { useCart } from '../app/hooks';
 import '../styles/cart.css';
 
-// Helper function to get product image with fallback
+
 const getProductImage = (item) => {
   const imageUrl = item.thumbnail || item.image || 'https://via.placeholder.com/100';
   const handleImageError = (e) => {
@@ -28,7 +28,7 @@ const calculateItemTotal = (item) => {
 };
 
 const Cart = () => {
-  const { items: cart, totalAmount } = useCart();
+  const { items: cart, totalAmount, deleteFromCart } = useCart();
 
   // Show empty cart message if no items
   if (cart.length === 0) {
@@ -52,15 +52,34 @@ const Cart = () => {
         {cart.map(item => {
           const price = (item.price || item.unitPrice || 0).toFixed(2);
           const itemTotal = calculateItemTotal(item);
+          const productName = item.title || item.name || 'Unnamed Product';
+          const imageUrl = item.image || item.thumbnail || 'https://via.placeholder.com/100';
           
           return (
             <div key={item.id} className="cart-item">
               <div className="cart-item-image-container">
-                {getProductImage(item)}
+                <img 
+                  src={imageUrl} 
+                  alt={productName}
+                  className="cart-item-image"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://via.placeholder.com/100';
+                  }}
+                />
               </div>
               
               <div className="cart-item-details">
-                <h3>{item.title || item.name || 'Unnamed Product'}</h3>
+                <div className="cart-item-header">
+                  <h3>{productName}</h3>
+                  <button 
+                    onClick={() => deleteFromCart(item.id)}
+                    className="delete-item-btn"
+                    aria-label={`Remove ${productName} from cart`}
+                  >
+                    ×
+                  </button>
+                </div>
                 
                 <div className="cart-item-price">
                   <span>${price}</span>

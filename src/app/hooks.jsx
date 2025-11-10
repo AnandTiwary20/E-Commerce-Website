@@ -7,7 +7,7 @@ import {
   selectCartItems,
   selectTotalQuantity,
   selectTotalAmount
-} from '../features/cart/cartSlice';
+} from '../features/cart/cartSlice.jsx';
 
 export const useCart = () => {
   const dispatch = useDispatch();
@@ -19,9 +19,11 @@ export const useCart = () => {
   const addToCart = (product) => {
     dispatch(addItemToCart({
       id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
+      title: product.title || product.name,
+      name: product.name || product.title,
+      price: product.price || product.unitPrice || 0,
+      image: product.image || product.thumbnail,
+      thumbnail: product.thumbnail || product.image,
       quantity: 1
     }));
   };
