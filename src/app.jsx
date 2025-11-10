@@ -1,10 +1,21 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { useState } from 'react'
-import Navbar from './Components/Navbar'
-import ProductList from './Components/ProductList'
-import Cart from './Components/Cart'
-import NotFound from './Components/NotFound'
-import './app.css'
+import { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
+import Navbar from './Components/Navbar';
+import './app.css';
+
+// Lazy load components
+const ProductList = lazy(() => import('./Components/ProductList'));
+const Cart = lazy(() => import('./Components/Cart'));
+const NotFound = lazy(() => import('./Components/NotFound'));
+
+// Loading component
+const Loading = () => (
+  <div className="loading-container">
+    <div className="loading-spinner"></div>
+    <p>Loading...</p>
+  </div>
+);
 
 function App() {
   const [cart, setCart] = useState([])
@@ -41,20 +52,22 @@ function App() {
       <div className="app">
         <Navbar cartCount={totalItems} />
         <main className="main-content">
-          <Routes>
-            <Route path="/" element={<ProductList addToCart={addToCart} />} />
-            <Route
-              path="/cart"
-              element={
-                <Cart
-                  cart={cart}
-                  removeFromCart={removeFromCart}
-                  updateQuantity={updateQuantity}
-                />
-              }
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Suspense fallback={<Loading />}>
+            <Routes>
+              <Route path="/" element={<ProductList addToCart={addToCart} />} />
+              <Route
+                path="/cart"
+                element={
+                  <Cart
+                    cart={cart}
+                    removeFromCart={removeFromCart}
+                    updateQuantity={updateQuantity}
+                  />
+                }
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </main>
       </div>
     </Router>

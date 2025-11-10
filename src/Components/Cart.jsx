@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import { FiShoppingBag } from 'react-icons/fi';
+import { FiShoppingBag, FiPlus, FiMinus, FiTrash2, FiArrowLeft } from 'react-icons/fi';
 import { useCart } from '../app/hooks';
+import LazyImage from './LazyImage';
 import '../styles/cart.css';
 
 
@@ -58,14 +59,12 @@ const Cart = () => {
           return (
             <div key={item.id} className="cart-item">
               <div className="cart-item-image-container">
-                <img 
-                  src={imageUrl} 
+                <LazyImage 
+                  src={imageUrl}
                   alt={productName}
                   className="cart-item-image"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = 'https://via.placeholder.com/100';
-                  }}
+                  width="80"
+                  height="80"
                 />
               </div>
               
