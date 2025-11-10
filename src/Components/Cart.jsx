@@ -1,9 +1,16 @@
 import { Link } from 'react-router-dom';
 import { FiTrash2, FiPlus, FiMinus, FiShoppingBag, FiArrowLeft } from 'react-icons/fi';
+import { useCart } from '../app/hooks';
 import '../styles/cart.css';
 
-const Cart = ({ cart, removeFromCart, updateQuantity }) => {
-  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
+const Cart = () => {
+  const { 
+    items: cart, 
+    removeFromCart, 
+    updateQuantity, 
+    totalAmount,
+    clearCart
+  } = useCart();
 
   if (cart.length === 0) {
     return (
@@ -27,6 +34,11 @@ const Cart = ({ cart, removeFromCart, updateQuantity }) => {
         </Link>
         <span className="cart-header-separator">•</span>
         <span>Shopping Cart ({cart.reduce((sum, item) => sum + item.quantity, 0)} {cart.length === 1 ? 'item' : 'items'})</span>
+        {cart.length > 0 && (
+          <button onClick={clearCart} className="clear-cart-btn">
+            Clear Cart
+          </button>
+        )}
       </div>
       
       <div className="cart-items">
@@ -67,7 +79,7 @@ const Cart = ({ cart, removeFromCart, updateQuantity }) => {
               </div>
             </div>
             <button 
-              onClick={() => removeFromCart(item.id)}
+              onClick={() => dispatch(removeFromCart(item.id))}
               className="remove-item-btn"
               aria-label="Remove item"
             >
@@ -78,13 +90,22 @@ const Cart = ({ cart, removeFromCart, updateQuantity }) => {
       </div>
       
       <div className="cart-summary">
-        <div className="summary-header">
-          <span className="summary-total-label">Total:</span>
-          <span className="summary-total-amount">${total}</span>
+        <h3>Order Summary</h3>
+        <div className="summary-row">
+          <span>Subtotal</span>
+          <span>${totalAmount.toFixed(2)}</span>
         </div>
-        <Link to="/checkout" className="checkout-btn">
+        <div className="summary-row">
+          <span>Shipping</span>
+          <span>Free</span>
+        </div>
+        <div className="summary-row total">
+          <span>Total</span>
+          <span>${totalAmount.toFixed(2)}</span>
+        </div>
+        <button className="checkout-btn" disabled={cart.length === 0}>
           Proceed to Checkout
-        </Link>
+        </button>
         <Link to="/" className="continue-shopping-link">
           Continue Shopping
         </Link>
