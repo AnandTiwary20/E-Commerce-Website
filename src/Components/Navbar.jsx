@@ -1,12 +1,10 @@
 import { Link } from 'react-router-dom'
-import { FiShoppingCart, FiHome, FiMenu, FiX } from 'react-icons/fi'
+import { FiShoppingCart, FiHome } from 'react-icons/fi'
 import { useState, useEffect } from 'react'
 import '../styles/navbar.css'
 
 const Navbar = ({ cartCount }) => {
-  const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-
   
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 10)
@@ -19,21 +17,13 @@ const Navbar = ({ cartCount }) => {
       <div className="container">
         <Link to="/" className="logo">ShoppyGlobe</Link>
 
-        <button 
-          className="menu-btn" 
-          onClick={() => setIsOpen(!isOpen)} 
-          aria-label="toggle menu"
-        >
-          {isOpen ? <FiX size={22} /> : <FiMenu size={22} />}
-        </button>
-
-        <div className={`nav-links ${isOpen ? 'active' : ''}`}>
-          <Link to="/" className="nav-link" onClick={() => setIsOpen(false)}>
+        <div className="nav-links">
+          <Link to="/" className="nav-link">
             <FiHome className="nav-icon" />
             <span>Home</span>
           </Link>
 
-          <Link to="/cart" className="nav-link" onClick={() => setIsOpen(false)}>
+          <Link to="/cart" className="nav-link">
             <div className="cart-container">
               <FiShoppingCart className="nav-icon" />
               {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
