@@ -1,6 +1,13 @@
 import { Link } from 'react-router-dom';
-import { FiShoppingBag } from 'react-icons/fi';
-import { useCart } from '../app/hooks';
+import { FiShoppingBag, FiPlus, FiMinus } from 'react-icons/fi';
+import { useDispatch, useSelector } from 'react-redux';
+import { 
+  removeItemFromCart, 
+  updateItemQuantity, 
+  selectCartItems, 
+  selectTotalAmount 
+} from '../features/cart/cartSlice';
+import { useEffect, useState } from 'react';
 import LazyImage from './LazyImage';
 import '../styles/cart.css';
 
@@ -11,7 +18,39 @@ const getImageUrl = (item) => {
 };
 
 const Cart = () => {
-  const { items: cart, totalAmount, deleteFromCart } = useCart();
+  const dispatch = useDispatch();
+  const cart = useSelector(selectCartItems);
+  const totalAmount = useSelector(selectTotalAmount);
+  const [quantities, setQuantities] = useState({});
+
+  // Initialize quantities from cart
+  useEffect(() => {
+    const initialQuantities = {};
+    cart.forEach(item => {
+      initialQuantities[item.id] = item.quantity;
+    });
+    setQuantities(initialQuantities);
+  }, [cart]);
+
+  const handleQuantityChange = (itemId, newQuantity) => {
+    // Ensure quantity is at least 1
+    const quantity = Math.max(1, parseInt(newQuantity) || 1);
+    setQuantities(prev => ({
+      ...prev,
+      [itemId]: quantity
+    }));
+    dispatch(updateItemQuantity(itemId, quantity));
+  };
+
+  const handleIncrement = (itemId) => {
+    const newQuantity = (quantities[itemId] || 1) + 1;
+    handleQuantityChange(itemId, newQuantity);
+  };
+
+  const handleDecrement = (itemId) => {
+    const newQuantity = Math.max(1, (quantities[itemId] || 1) - 1);
+    handleQuantityChange(itemId, newQuantity);
+  };
 
   if (!cart || cart.length === 0) {
     return (
@@ -48,16 +87,54 @@ const Cart = () => {
                   <h3 className="cart-item-title">{name}</h3>
                   <button
                     className="delete-item-btn"
-                    onClick={() => deleteFromCart(item.id)}
-                    aria-label={`Remove ${name}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      dispatch(removeItemFromCart(item.id));
+                    }}
+                    aria-label="Remove item"
                   >
                     ×
                   </button>
                 </div>
 
+                <div className="cart-item-quantity">
+                  <button 
+                    className="quantity-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDecrement(item.id);
+                    }}
+                    disabled={quantities[item.id] <= 1}
+                    aria-label="Decrease quantity"
+                  >
+                    <FiMinus size={14} />
+                  </button>
+                  <input
+                    type="number"
+                    min="1"
+                    value={quantities[item.id] || 1}
+                    onChange={(e) => handleQuantityChange(item.id, e.target.value)}
+                    onBlur={(e) => {
+                      const value = parseInt(e.target.value) || 1;
+                      handleQuantityChange(item.id, value);
+                    }}
+                    className="quantity-input"
+                    aria-label="Quantity"
+                  />
+                  <button 
+                    className="quantity-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleIncrement(item.id);
+                    }}
+                    aria-label="Increase quantity"
+                  >
+                    <FiPlus size={14} />
+                  </button>
+                </div>
                 <div className="cart-item-price">
                   <span>${price} each</span>
-                  <span className="quantity">× {quantity}</span>
+                  <span className="item-total">${(price * quantity).toFixed(2)}</span>
                 </div>
 
                 <div className="item-total">

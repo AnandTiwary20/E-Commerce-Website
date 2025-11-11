@@ -1,13 +1,12 @@
 import { useProducts } from '../hooks/useProducts';
-import { useCart } from '../app/hooks';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSearchQuery } from '../features/search/searchSlice';
+import { setSearchQuery } from '../features/search/searchSlice.jsx';
 import { Link, useNavigate } from 'react-router-dom';
+import { addItemToCart } from '../features/cart/cartSlice';
 import '../styles/amazonGrid.css';
 
-const ProductList = () => {
+const ProductList = ({ addToCart }) => {
   const { products, loading, error } = useProducts();
-  const { addToCart } = useCart();
   const searchQuery = useSelector((state) => state.search.searchQuery);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -15,7 +14,7 @@ const ProductList = () => {
   const handleAddToCart = (e, product) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart({ ...product, quantity: 1 });
+    dispatch(addItemToCart({ ...product, quantity: 1 }));
   };
 
   // Filter products based on search query
@@ -45,7 +44,6 @@ const ProductList = () => {
     );
   }
 
-  // Function to render star rating
   const renderRating = (rating) => {
     const stars = [];
     const fullStars = Math.floor(rating);
@@ -74,7 +72,7 @@ const ProductList = () => {
       <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto 20px', padding: '0 20px' }}>
         <input
           type="text"
-          placeholder="Search products..."
+          placeholder="We welcome you to shop with us"
           value={searchQuery}
           onChange={handleSearchChange}
           style={{

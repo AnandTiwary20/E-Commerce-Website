@@ -1,7 +1,9 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useState } from 'react';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import store from './app/store';
 import Navbar from './Components/Navbar';
+import { addItemToCart, removeItemFromCart, updateItemQuantity, clearCart, selectCartItems, selectTotalQuantity } from './features/cart/cartSlice';
 import './app.css';
 
 // Lazy load components
@@ -17,61 +19,84 @@ const Loading = () => (
   </div>
 );
 
+// CartProvider component to handle cart operations
+const CartProvider = ({ children }) => {
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectCartItems);
+  const totalItems = useSelector(selectTotalQuantity);
+
+  const handleAddToCart = (product) => {
+    dispatch(addItemToCart(product));
+  };
+
+  const handleRemoveFromCart = (id) => {
+    dispatch(removeItemFromCart(id));
+  };
+
+  const handleUpdateQuantity = (id, quantity) => {
+    if (quantity < 1) {
+      handleRemoveFromCart(id);
+    } else {
+      dispatch(updateItemQuantity({ id, quantity }));
+    }
+  };
+
+  const handleClearCart = () => {
+    dispatch(clearCart());
+  };
+
+  return children({
+    cartItems,
+    totalItems,
+    addToCart: handleAddToCart,
+    removeFromCart: handleRemoveFromCart,
+    updateQuantity: handleUpdateQuantity,
+    clearCart: handleClearCart,
+  });
+};
+
 function App() {
-  const [cart, setCart] = useState([])
-
-  const addToCart = (product) => {
-    setCart((prev) => {
-      const item = prev.find((i) => i.id === product.id)
-      if (item) {
-        return prev.map((i) =>
-          i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
-        )
-      }
-      return [...prev, { ...product, quantity: 1 }]
-    })
-  }
-
-  const removeFromCart = (id) => {
-    setCart((prev) => prev.filter((item) => item.id !== id))
-  }
-
-  const updateQuantity = (id, qty) => {
-    if (qty < 1) return
-    setCart((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity: qty } : item
-      )
-    )
-  }
-
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
-    <Router>
-      <div className="app">
-        <Navbar cartCount={totalItems} />
-        <main className="main-content">
-          <Suspense fallback={<Loading />}>
-            <Routes>
-              <Route path="/" element={<ProductList addToCart={addToCart} />} />
-              <Route
-                path="/cart"
-                element={
-                  <Cart
-                    cart={cart}
-                    removeFromCart={removeFromCart}
-                    updateQuantity={updateQuantity}
-                  />
-                }
-              />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </main>
-      </div>
-    </Router>
-  )
+    <Provider store={store}>
+      <Router>
+        <div className="app">
+          <CartProvider>
+            {({ cartItems, totalItems, addToCart, removeFromCart, updateQuantity }) => (
+              <>
+                <Navbar cartCount={totalItems} />
+                <main className="main-content">
+                  <Suspense fallback={<Loading />}>
+                    <Routes>
+                      <Route 
+                        path="/" 
+                        element={
+                          <ProductList 
+                            addToCart={addToCart} 
+                          />
+                        } 
+                      />
+                      <Route 
+                        path="/cart" 
+                        element={
+                          <Cart 
+                            cartItems={cartItems}
+                            removeFromCart={removeFromCart} 
+                            updateQuantity={updateQuantity} 
+                          />
+                        } 
+                      />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </Suspense>
+                </main>
+              </>
+            )}
+          </CartProvider>
+        </div>
+      </Router>
+    </Provider>
+  );
 }
 
 export default App
