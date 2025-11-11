@@ -30,7 +30,6 @@ const Home = () => {
       </div>
       
       <section className="featured-products">
-        <h2>Featured Products</h2>
         <ProductList products={products} />
       </section>
     </div>

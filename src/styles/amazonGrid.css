@@ -301,7 +301,7 @@
   margin: 0;
   overflow: hidden;
   position: relative;
-  top: -1px; /* Pull up slightly to account for any subpixel rendering */
+  top: -1px; 
 }
 
 .banner h1 {
@@ -312,6 +312,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
+   color: #f1f5f9;
+  font-weight: 600;
 }
 
 .banner p {
