@@ -82,7 +82,7 @@ const Checkout = () => {
 
   return (
     <div className="checkout-container">
-      <h1>Checkout</h1>
+      <h1>Thank You ! For Shopping With Us</h1>
       
       <div className="checkout-content">
         <div className="checkout-form">

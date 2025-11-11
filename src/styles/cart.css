@@ -20,6 +20,12 @@
 }
 
 
+.item-total {
+  color: #f8fafc;
+  font-weight: 500;
+}
+
+
 .price-text {
   color: #cbd5e1;
   font-size: 0.95rem;
@@ -137,13 +143,13 @@
 
 .item-total {
   font-weight: 600;
-  color: #ffffff !important;
+  color: #111827;
   margin-top: 0.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding-top: 0.5rem;
-  border-top: 1px dashed #4a5568;
+  border-top: 1px dashed #e5e7eb;
 }
 
 .cart-item-quantity {
