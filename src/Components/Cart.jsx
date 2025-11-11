@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
-import { FiShoppingBag, FiPlus, FiMinus } from 'react-icons/fi';
+import { FiShoppingBag, FiTrash2, FiPlus, FiMinus } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
   removeItemFromCart, 
   updateItemQuantity, 
+  clearCart,
   selectCartItems, 
-  selectTotalAmount 
+  selectTotalAmount,
+  selectTotalQuantity
 } from '../features/cart/cartSlice';
 import { useEffect, useState } from 'react';
 import LazyImage from './LazyImage';
@@ -14,52 +16,67 @@ import '../styles/cart.css';
 const getImageUrl = (item) => {
   if (item.image && (item.image.startsWith('http') || item.image.startsWith('//'))) return item.image;
   if (item.image) return item.image.startsWith('/') ? item.image : `/${item.image}`;
+  if (item.thumbnail) return item.thumbnail;
   return 'https://via.placeholder.com/100';
 };
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const cart = useSelector(selectCartItems);
+  const cartItems = useSelector(selectCartItems);
   const totalAmount = useSelector(selectTotalAmount);
+  const totalItems = useSelector(selectTotalQuantity);
   const [quantities, setQuantities] = useState({});
 
   // Initialize quantities from cart
   useEffect(() => {
     const initialQuantities = {};
-    cart.forEach(item => {
+    cartItems.forEach(item => {
       initialQuantities[item.id] = item.quantity;
     });
     setQuantities(initialQuantities);
-  }, [cart]);
+  }, [cartItems]);
 
   const handleQuantityChange = (itemId, newQuantity) => {
-    // Ensure quantity is at least 1
     const quantity = Math.max(1, parseInt(newQuantity) || 1);
     setQuantities(prev => ({
       ...prev,
       [itemId]: quantity
     }));
-    dispatch(updateItemQuantity(itemId, quantity));
+    dispatch(updateItemQuantity({ id: itemId, quantity }));
   };
 
   const handleIncrement = (itemId) => {
-    const newQuantity = (quantities[itemId] || 1) + 1;
-    handleQuantityChange(itemId, newQuantity);
+    const currentQuantity = quantities[itemId] || 1;
+    dispatch(updateItemQuantity({ id: itemId, quantity: currentQuantity + 1 }));
   };
 
   const handleDecrement = (itemId) => {
-    const newQuantity = Math.max(1, (quantities[itemId] || 1) - 1);
-    handleQuantityChange(itemId, newQuantity);
+    const currentQuantity = quantities[itemId] || 1;
+    if (currentQuantity > 1) {
+      dispatch(updateItemQuantity({ id: itemId, quantity: currentQuantity - 1 }));
+    }
   };
 
-  if (!cart || cart.length === 0) {
+  const handleRemoveItem = (id) => {
+    if (window.confirm('Are you sure you want to remove this item?')) {
+      dispatch(removeItemFromCart(id));
+    }
+  };
+
+  const handleClearCart = () => {
+    if (window.confirm('Are you sure you want to clear your cart?')) {
+      dispatch(clearCart());
+    }
+  };
+
+  if (!cartItems || cartItems.length === 0) {
     return (
       <div className="empty-cart">
-        <FiShoppingBag size={48} className="empty-cart-icon" />
-        <h3>Your cart is empty</h3>
-        <p>Looks like you haven’t added anything to your cart yet.</p>
-        <Link to="/" className="continue-shopping-btn">
-          Back to Shopping
+        <FiShoppingBag size={64} className="empty-cart-icon" />
+        <h2>Your cart is empty</h2>
+        <p>Looks like you haven't added anything to your cart yet.</p>
+        <Link to="/" className="continue-shopping">
+          Continue Shopping
         </Link>
       </div>
     );

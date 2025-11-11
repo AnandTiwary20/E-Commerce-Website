@@ -3,21 +3,33 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSearchQuery } from '../features/search/searchSlice.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { addItemToCart } from '../features/cart/cartSlice';
+import { useContext } from 'react';
+import { useCart } from '../context/CartContext';
 import '../styles/amazonGrid.css';
 
-const ProductList = ({ addToCart }) => {
+const ProductList = () => {
   const { products, loading, error } = useProducts();
   const searchQuery = useSelector((state) => state.search.searchQuery);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { addToCart } = useCart();
+
   const handleAddToCart = (e, product) => {
     e.preventDefault();
     e.stopPropagation();
-    dispatch(addItemToCart({ ...product, quantity: 1 }));
+    
+    addToCart({ 
+      ...product, 
+      quantity: 1,
+      price: Number(product.price) || 0
+    });
+    
+    // Show success message
+    alert(`${product.title} added to cart!`);
   };
 
-  // Filter products based on search query
+  
   const filteredProducts = products.filter(product => 
     product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     product.description.toLowerCase().includes(searchQuery.toLowerCase())

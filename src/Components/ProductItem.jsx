@@ -1,16 +1,21 @@
 import { Link } from 'react-router-dom';
 import { FiShoppingCart, FiHeart } from 'react-icons/fi';
-import { useCart } from '../app/hooks';
+import { useDispatch } from 'react-redux';
+import { addItemToCart } from '../features/cart/cartSlice';
 import LazyImage from './LazyImage';
 import '../styles/productItem.css';
 
 const ProductItem = ({ product }) => {
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
 
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product);
+    dispatch(addItemToCart({ 
+      ...product,
+      quantity: 1,
+      price: Number(product.price) || 0
+    }));
   };
 
   return (

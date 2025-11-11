@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { addItemToCart } from '../features/cart/cartSlice';
 import { FiShoppingCart, FiArrowLeft } from 'react-icons/fi';
+import { useCart } from '../context/CartContext';
 import '../styles/product-detail.css';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [selectedImage, setSelectedImage] = useState(0);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -35,9 +35,19 @@ const ProductDetail = () => {
     fetchProduct();
   }, [id]);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     if (product) {
-      dispatch(addItemToCart({ ...product, quantity }));
+      addToCart({ 
+        ...product, 
+        quantity: quantity,
+        price: Number(product.price) || 0
+      });
+      
+      // Show success message
+      alert(`${product.title} added to cart!`);
     }
   };
 
@@ -81,11 +91,18 @@ const ProductDetail = () => {
       <div className="product-container">
         <div className="product-gallery">
           <div className="main-image">
-            <img src={product.thumbnail} alt={product.title} />
+            <img 
+              src={product.images ? product.images[selectedImage] : product.thumbnail} 
+              alt={product.title} 
+            />
           </div>
           <div className="thumbnail-container">
             {product.images && product.images.map((img, index) => (
-              <div key={index} className="thumbnail">
+              <div 
+                key={index} 
+                className={`thumbnail ${selectedImage === index ? 'active' : ''}`}
+                onClick={() => setSelectedImage(index)}
+              >
                 <img src={img} alt={`${product.title} ${index + 1}`} />
               </div>
             ))}
@@ -118,6 +135,7 @@ const ProductDetail = () => {
               <button 
                 onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
                 disabled={quantity <= 1}
+                aria-label="Decrease quantity"
               >
                 -
               </button>
@@ -127,8 +145,14 @@ const ProductDetail = () => {
                 min="1"
                 value={quantity}
                 onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                aria-label="Quantity"
               />
-              <button onClick={() => setQuantity(prev => prev + 1)}>+</button>
+              <button 
+                onClick={() => setQuantity(prev => prev + 1)}
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
             </div>
           </div>
           
@@ -136,6 +160,7 @@ const ProductDetail = () => {
             <button 
               className="add-to-cart"
               onClick={handleAddToCart}
+              aria-label="Add to cart"
             >
               <FiShoppingCart /> Add to Cart
             </button>
