@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FiShoppingBag, FiTrash2, FiPlus, FiMinus } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
@@ -22,6 +22,7 @@ const getImageUrl = (item) => {
 
 const Cart = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cartItems = useSelector(selectCartItems);
   const totalAmount = useSelector(selectTotalAmount);
   const totalItems = useSelector(selectTotalQuantity);
@@ -38,22 +39,38 @@ const Cart = () => {
 
   const handleQuantityChange = (itemId, newQuantity) => {
     const quantity = Math.max(1, parseInt(newQuantity) || 1);
+    // Update local state
     setQuantities(prev => ({
       ...prev,
       [itemId]: quantity
     }));
-    dispatch(updateItemQuantity({ id: itemId, quantity }));
+    // Update Redux state
+    dispatch(updateItemQuantity(itemId, quantity));
   };
 
   const handleIncrement = (itemId) => {
     const currentQuantity = quantities[itemId] || 1;
-    dispatch(updateItemQuantity({ id: itemId, quantity: currentQuantity + 1 }));
+    const newQuantity = currentQuantity + 1;
+    // Update local state
+    setQuantities(prev => ({
+      ...prev,
+      [itemId]: newQuantity
+    }));
+    // Update Redux state
+    dispatch(updateItemQuantity(itemId, newQuantity));
   };
 
   const handleDecrement = (itemId) => {
     const currentQuantity = quantities[itemId] || 1;
     if (currentQuantity > 1) {
-      dispatch(updateItemQuantity({ id: itemId, quantity: currentQuantity - 1 }));
+      const newQuantity = currentQuantity - 1;
+      // Update local state
+      setQuantities(prev => ({
+        ...prev,
+        [itemId]: newQuantity
+      }));
+      // Update Redux state
+      dispatch(updateItemQuantity(itemId, newQuantity));
     }
   };
 
@@ -167,7 +184,7 @@ const Cart = () => {
       <div className="cart-summary">
         <h3 className="summary-title">Order Summary</h3>
         <div className="summary-row">
-          <span>Subtotal ({cart.reduce((sum, item) => sum + item.quantity, 0)} items)</span>
+          <span>Subtotal ({totalItems} {totalItems === 1 ? 'item' : 'items'})</span>
           <span>${totalAmount.toFixed(2)}</span>
         </div>
 
@@ -176,7 +193,7 @@ const Cart = () => {
           <span>${totalAmount.toFixed(2)}</span>
         </div>
 
-        <button className="checkout-btn">Proceed to Checkout</button>
+        <button className="checkout-btn" onClick={() => navigate('/checkout')}>Proceed to Checkout</button>
 
         <Link to="/" className="continue-shopping-btn">
           Continue Shopping
