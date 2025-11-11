@@ -3,6 +3,7 @@ import { FiShoppingBag, FiTrash2, FiPlus, FiMinus } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
   removeItemFromCart, 
+  deleteItemFromCart,
   updateItemQuantity, 
   clearCart,
   selectCartItems, 
@@ -122,16 +123,20 @@ const Cart = () => {
               <div className="cart-item-details">
                 <div className="cart-item-header">
                   <h3 className="cart-item-title">{name}</h3>
-                  <button
-                    className="delete-item-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      dispatch(removeItemFromCart(item.id));
-                    }}
-                    aria-label="Remove item"
-                  >
-                    ×
-                  </button>
+                  <div className="delete-item-container" title="Remove item">
+                    <button
+                      className="delete-item-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (window.confirm('Are you sure you want to remove this item from your cart?')) {
+                          dispatch(deleteItemFromCart(item.id));
+                        }
+                      }}
+                      aria-label="Remove item completely"
+                    >
+                      <FiTrash2 size={16} />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="cart-item-quantity">
