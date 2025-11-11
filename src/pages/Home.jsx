@@ -33,11 +33,6 @@ const Home = () => {
         <h2>Featured Products</h2>
         <ProductList products={products} />
       </section>
-      
-      <div className="cta-section">
-        <h2>Ready to shop?</h2>
-        <Link to="/products" className="cta-button">View All Products</Link>
-      </div>
     </div>
   );
 };

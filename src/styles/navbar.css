@@ -5,12 +5,16 @@
   padding: 0.6rem 0;
   position: sticky;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   min-height: 76px;
   display: flex;
   align-items: center;
+  margin: 0;
+  width: 100%;
 }
 
 .container {

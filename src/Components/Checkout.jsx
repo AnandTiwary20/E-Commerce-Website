@@ -88,7 +88,7 @@ const Checkout = () => {
                 value={formData.name}
                 onChange={handleInputChange}
                 required
-                placeholder="John Doe"
+                placeholder="Narendra Modi"
               />
             </div>
             
@@ -100,7 +100,7 @@ const Checkout = () => {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
-                placeholder="john@example.com"
+                placeholder="modiji@gmail.com"
               />
             </div>
             
@@ -111,7 +111,7 @@ const Checkout = () => {
                 value={formData.address}
                 onChange={handleInputChange}
                 required
-                placeholder="123 Main St, City, Country"
+                placeholder="Delhi"
                 rows="3"
               ></textarea>
             </div>
@@ -126,7 +126,6 @@ const Checkout = () => {
                 value={formData.cardNumber}
                 onChange={handleInputChange}
                 required
-                placeholder="1234 5678 9012 3456"
                 maxLength="19"
               />
             </div>
@@ -154,7 +153,6 @@ const Checkout = () => {
                     value={formData.cvv}
                     onChange={handleInputChange}
                     required
-                    placeholder="123"
                     maxLength="3"
                   />
                   <FiLock className="lock-icon" />
