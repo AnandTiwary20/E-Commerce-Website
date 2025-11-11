@@ -103,7 +103,10 @@ const Cart = () => {
     <div className="cart-container">
    
       <div className="cart-items">
-        <h2 className="cart-header">Your Shopping Cart ({totalItems} {totalItems === 1 ? 'item' : 'items'})</h2>
+        <div className="cart-header">
+          <FiShoppingBag size={24} className="cart-icon" />
+          <h2>Your Shopping Cart ({totalItems} {totalItems === 1 ? 'item' : 'items'})</h2>
+        </div>
 
         {cartItems.map((item, index) => {
           const price = (item.price || item.unitPrice || 0).toFixed(2);

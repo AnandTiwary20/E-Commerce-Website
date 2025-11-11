@@ -51,6 +51,56 @@
   background-color: #888;
   border-radius: 4px;
 }
+.search-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 1.5rem auto 2rem;
+  padding: 0 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  backdrop-filter: blur(12px);
+}
+
+.search-input {
+  width: 100%;
+  max-width: 500px;
+  padding: 12px 20px 12px 45px;
+  font-size: 16px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+  transition: all 0.3s ease;
+  outline: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.3px;
+}
+
+.search-input:focus {
+  border-color: rgba(99, 102, 241, 0.7);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.6);
+  color: #fff;
+}
+
+
+.search-icon {
+  position: absolute;
+  left: calc(50% - 235px);
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.2rem;
+  pointer-events: none;
+}
+
 
 
 .product-card {

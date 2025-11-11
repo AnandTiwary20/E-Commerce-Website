@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { FiShoppingCart, FiHome } from 'react-icons/fi'
+import { FiShoppingBag, FiHome } from 'react-icons/fi'
 import { useState, useEffect } from 'react'
 import '../styles/navbar.css'
 
@@ -25,7 +25,7 @@ const Navbar = ({ cartCount }) => {
 
           <Link to="/cart" className="nav-link">
             <div className="cart-container">
-              <FiShoppingCart className="nav-icon" />
+              <FiShoppingBag className="nav-icon" />
               {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
             </div>
             <span>Cart</span>

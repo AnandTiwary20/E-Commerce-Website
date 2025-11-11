@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSearchQuery } from '../features/search/searchSlice.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { addItemToCart } from '../features/cart/cartSlice';
+import { FiShoppingCart, FiSearch } from 'react-icons/fi';
 import { useContext } from 'react';
 import { useCart } from '../context/CartContext';
 import '../styles/amazonGrid.css';
@@ -81,22 +82,14 @@ const ProductList = () => {
 
   return (
     <div className="amazon-container">
-      <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto 20px', padding: '0 20px' }}>
+      <div className="search-container">
+        <FiSearch className="search-icon" />
         <input
           type="text"
-          placeholder="We welcome you to shop with us"
+          placeholder="Search for products..."
           value={searchQuery}
           onChange={handleSearchChange}
-          style={{
-            width: '100%',
-            padding: '10px',
-            fontSize: '16px',
-            borderRadius: '4px',
-            border: '1px solid #ddd',
-            maxWidth: '500px',
-            display: 'block',
-            margin: '0 auto'
-          }}
+          className="search-input"
         />
       </div>
       <div className="products-grid" style={{ margin: '0 auto', maxWidth: '100%', padding: '0 20px' }}>
