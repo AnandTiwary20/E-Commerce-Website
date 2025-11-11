@@ -2,10 +2,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiShoppingBag, FiTrash2, FiPlus, FiMinus } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
-  removeItemFromCart, 
   deleteItemFromCart,
   updateItemQuantity, 
-  clearCart,
   selectCartItems, 
   selectTotalAmount,
   selectTotalQuantity
@@ -75,17 +73,6 @@ const Cart = () => {
     }
   };
 
-  const handleRemoveItem = (id) => {
-    if (window.confirm('Are you sure you want to remove this item?')) {
-      dispatch(removeItemFromCart(id));
-    }
-  };
-
-  const handleClearCart = () => {
-    if (window.confirm('Are you sure you want to clear your cart?')) {
-      dispatch(clearCart());
-    }
-  };
 
   if (!cartItems || cartItems.length === 0) {
     return (
@@ -105,7 +92,7 @@ const Cart = () => {
    
       <div className="cart-items">
         <div className="cart-header">
-          <FiShoppingBag size={24} className="cart-icon" />
+          <FiShoppingBag size={24} className="cart-icon" aria-hidden="true" />
           <h2>Your Shopping Cart ({totalItems} {totalItems === 1 ? 'item' : 'items'})</h2>
         </div>
 
@@ -125,6 +112,7 @@ const Cart = () => {
                   <h3 className="cart-item-title">{name}</h3>
                   <div className="delete-item-container" title="Remove item">
                     <button
+                      type="button"
                       className="delete-item-btn"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -132,24 +120,25 @@ const Cart = () => {
                           dispatch(deleteItemFromCart(item.id));
                         }
                       }}
-                      aria-label="Remove item completely"
+                      aria-label={`Remove ${name} from cart`}
                     >
-                      <FiTrash2 size={16} />
+                      <FiTrash2 size={16} aria-hidden="true" />
                     </button>
                   </div>
                 </div>
 
                 <div className="cart-item-quantity">
                   <button 
+                    type="button"
                     className="quantity-btn"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDecrement(item.id);
                     }}
                     disabled={quantities[item.id] <= 1}
-                    aria-label="Decrease quantity"
+                    aria-label={`Decrease quantity of ${name}`}
                   >
-                    <FiMinus size={14} />
+                    <FiMinus size={14} aria-hidden="true" />
                   </button>
                   <input
                     type="number"
@@ -164,14 +153,15 @@ const Cart = () => {
                     aria-label="Quantity"
                   />
                   <button 
+                    type="button"
                     className="quantity-btn"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleIncrement(item.id);
                     }}
-                    aria-label="Increase quantity"
+                    aria-label={`Increase quantity of ${name}`}
                   >
-                    <FiPlus size={14} />
+                    <FiPlus size={14} aria-hidden="true" />
                   </button>
                 </div>
                 <div className="cart-item-price">
@@ -201,7 +191,14 @@ const Cart = () => {
           <span>${totalAmount.toFixed(2)}</span>
         </div>
 
-        <button className="checkout-btn" onClick={() => navigate('/checkout')}>Proceed to Checkout</button>
+        <button 
+          type="button" 
+          className="checkout-btn" 
+          onClick={() => navigate('/checkout')}
+          disabled={!cartItems.length}
+        >
+          Proceed to Checkout
+        </button>
 
         <Link to="/" className="continue-shopping-btn">
           Continue Shopping
