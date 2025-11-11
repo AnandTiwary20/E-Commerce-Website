@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import store from './app/store';
 import Navbar from './Components/Navbar';
@@ -7,9 +7,11 @@ import { addItemToCart, removeItemFromCart, updateItemQuantity, clearCart, selec
 import './app.css';
 
 // Lazy load components
-const ProductList = lazy(() => import('./Components/ProductList'));
-const Cart = lazy(() => import('./Components/Cart'));
-const NotFound = lazy(() => import('./Components/NotFound'));
+const Home = lazy(() => import('./pages/Home'));
+const ProductDetail = lazy(() => import('./pages/ProductDetail'));
+const CartPage = lazy(() => import('./pages/Cart'));
+const Checkout = lazy(() => import('./pages/Checkout'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 // Loading component
 const Loading = () => (
@@ -55,27 +57,45 @@ const CartProvider = ({ children }) => {
   });
 };
 
+// Protected Route component
+const ProtectedRoute = ({ children }) => {
+  const isAuthenticated = true; // Replace with actual auth check
+  return isAuthenticated ? children : <Navigate to="/" />;
+};
+
 function App() {
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectCartItems);
+  const totalItems = useSelector(selectTotalQuantity);
 
   return (
     <Provider store={store}>
       <Router>
         <div className="app">
-          <CartProvider>
-            {({ cartItems, totalItems, addToCart, removeFromCart, updateQuantity }) => (
-              <>
-                <Navbar cartCount={totalItems} />
-                <main className="main-content">
-                  <Suspense fallback={<Loading />}>
-                    <Routes>
-                      <Route 
-                        path="/" 
-                        element={
-                          <ProductList 
-                            addToCart={addToCart} 
-                          />
-                        } 
-                      />
+          <Navbar cartCount={totalItems} />
+          <main className="main-content">
+            <Suspense fallback={
+              <div className="loading-container">
+                <div className="loading-spinner"></div>
+                <p>Loading...</p>
+              </div>
+            }>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route 
+                  path="/checkout" 
+                  element={
+                    <ProtectedRoute>
+                      <Checkout />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </main>
                       <Route 
                         path="/cart" 
                         element={
