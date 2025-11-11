@@ -42,26 +42,6 @@ Clean CSS Architecture — modular SCSS-like structure for scalability
 **Fonts**
 - Inter, system-ui fallback
 - -----------------------------------------------------------------------------------------
-🗂️ Folder Structure
-text
-Copy code
-src/
-├── components/
-│   ├── CartItem.jsx
-│   ├── CartSummary.jsx
-│   ├── ProductCard.jsx
-│
-├── pages/
-│   ├── CartPage.jsx
-│   ├── CheckoutPage.jsx
-│
-├── styles/
-│   ├── cart.css
-│   ├── checkout.css
-│   ├── navbar.css
-│   ├── global.css
-│
-├── App.jsx
-└── index.jsx
+
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
