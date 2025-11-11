@@ -80,7 +80,7 @@ const CartItem = React.memo(({ item, onUpdateQuantity, onRemove }) => {
         </div>
         
         {/* Item Total */}
-        <div className="item-total">
+        <div className="item-total" style={{ color: 'white', opacity: 1 }}>
           <span>Item Total:</span>
           <span className="total-amount">{formatPrice(itemTotal)}</span>
         </div>
