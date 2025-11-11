@@ -22,18 +22,29 @@ PropTypes Validation — strict prop-type checking for safer code
 Clean CSS Architecture — modular SCSS-like structure for scalability
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-✅ Here’s the fixed section of your README:
-🧩 Tech Stack
-Category	Technology
-Frontend	React (with hooks)
-Styling	Plain CSS (modular, BEM-like convention)
-Type Safety	PropTypes
-Build Tool	Vite / Create React App
-Icons	Lucide / Custom SVG
-Fonts	Inter, system-ui fallback
+## 🧩 Tech Stack
 
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+**Frontend**
+- React (with Hooks)
+
+**Styling**
+- Plain CSS (modular, BEM-like convention)
+
+**Type Safety**
+- PropTypes
+
+**Build Tool**
+- Vite / Create React App
+
+**Icons**
+- Lucide / Custom SVG
+
+**Fonts**
+- Inter, system-ui fallback
+- -----------------------------------------------------------------------------------------
 🗂️ Folder Structure
+text
+Copy code
 src/
 ├── components/
 │   ├── CartItem.jsx
@@ -52,6 +63,5 @@ src/
 │
 ├── App.jsx
 └── index.jsx
-
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
