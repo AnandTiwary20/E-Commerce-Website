@@ -13,17 +13,9 @@ const CartPage = lazy(() => import('./Components/Cart'));
 const Checkout = lazy(() => import('./Components/Checkout'));
 const NotFound = lazy(() => import('./Components/NotFound'));
 
-// Loading component
-const Loading = () => (
-  <div className="loading-container">
-    <div className="loading-spinner"></div>
-    <p>Loading...</p>
-  </div>
-);
-
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = true; // Replace with actual auth check
+  const isAuthenticated = true; // TODO: Replace with actual auth check
   return isAuthenticated ? children : <Navigate to="/" />;
 };
 
@@ -36,7 +28,12 @@ function App() {
         <div className="app">
           <Navbar cartCount={totalItems} />
           <main className="main-content">
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={
+              <div className="loading-container">
+                <div className="loading-spinner"></div>
+                <p>Loading...</p>
+              </div>
+            }>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/product/:id" element={<ProductDetail />} />

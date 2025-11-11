@@ -11,7 +11,7 @@ const Checkout = () => {
   const cartItems = useSelector(selectCartItems);
   const totalAmount = useSelector(selectTotalAmount);
   
-  // Format price in Indian Rupees
+ 
   const formatPrice = useMemo(() => (amount) => {
     return `₹${Number(amount).toLocaleString('en-IN', { 
       minimumFractionDigits: 2, 
@@ -38,10 +38,9 @@ const Checkout = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // In a real app, you would process the payment here
+  
     console.log('Processing payment with:', formData);
-    
-    // Simulate payment processing
+ 
     setTimeout(() => {
       setOrderPlaced(true);
       dispatch(clearCart());
