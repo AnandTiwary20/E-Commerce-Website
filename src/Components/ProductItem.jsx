@@ -1,17 +1,26 @@
 import { Link } from 'react-router-dom';
 import { FiShoppingCart, FiHeart } from 'react-icons/fi';
 import { useDispatch } from 'react-redux';
-import { addItemToCart } from '../features/cart/cartSlice';
+import { addItem } from '../features/cart/cartSlice';
 import LazyImage from './LazyImage';
+import { useMemo } from 'react';
 import '../styles/productItem.css';
 
 const ProductItem = ({ product }) => {
   const dispatch = useDispatch();
+  
+  
+  const formatPrice = useMemo(() => (amount) => {
+    return `₹${Number(amount).toLocaleString('en-IN', { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    })}`;
+  }, []);
 
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    dispatch(addItemToCart({ 
+    dispatch(addItem({ 
       ...product,
       quantity: 1,
       price: Number(product.price) || 0
@@ -41,7 +50,7 @@ const ProductItem = ({ product }) => {
       </div>
       <div className="product-info">
         <h3 className="product-title">{product.title || product.name || 'Unnamed Product'}</h3>
-        <p className="product-price">${product.price || 0}</p>
+        <p className="product-price">{formatPrice(product.price || 0)}</p>
       </div>
     </Link>
   );

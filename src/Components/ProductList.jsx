@@ -2,9 +2,9 @@ import { useProducts } from '../hooks/useProducts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSearchQuery } from '../features/search/searchSlice.jsx';
 import { Link, useNavigate } from 'react-router-dom';
-import { addItemToCart } from '../features/cart/cartSlice';
+import { addItem } from '../features/cart/cartSlice';
 import { FiShoppingCart, FiSearch } from 'react-icons/fi';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { useCart } from '../context/CartContext';
 import '../styles/amazonGrid.css';
 
@@ -15,6 +15,14 @@ const ProductList = () => {
   const navigate = useNavigate();
 
   const { addToCart } = useCart();
+  
+  // Format price in Indian Rupees
+  const formatPrice = useMemo(() => (amount) => {
+    return `₹${Number(amount).toLocaleString('en-IN', { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    })}`;
+  }, []);
 
   const handleAddToCart = (e, product) => {
     e.preventDefault();
@@ -126,11 +134,11 @@ const ProductList = () => {
               
               <div className="price-container">
                 <span className="current-price">
-                  ${product.price.toFixed(2)}
+                  {formatPrice(product.price)}
                 </span>
                 {product.discountPercentage > 0 && (
                   <span className="original-price">
-                    ${(product.price / (1 - product.discountPercentage / 100)).toFixed(2)}
+                    {formatPrice(product.price / (1 - product.discountPercentage / 100))}
                   </span>
                 )}
                 {product.discountPercentage > 10 && (

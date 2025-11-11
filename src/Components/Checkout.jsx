@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCart, selectCartItems, selectTotalAmount } from '../features/cart/cartSlice';
@@ -10,6 +10,14 @@ const Checkout = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
   const totalAmount = useSelector(selectTotalAmount);
+  
+  // Format price in Indian Rupees
+  const formatPrice = useMemo(() => (amount) => {
+    return `₹${Number(amount).toLocaleString('en-IN', { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    })}`;
+  }, []);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -161,7 +169,7 @@ const Checkout = () => {
             </div>
             
             <button type="submit" className="place-order-btn">
-              Place Order - ${totalAmount.toFixed(2)}
+              Place Order - {formatPrice(totalAmount)}
             </button>
           </form>
         </div>
@@ -181,7 +189,7 @@ const Checkout = () => {
                   <p>Qty: {item.quantity}</p>
                 </div>
                 <div className="order-item-price">
-                  ${(item.price * item.quantity).toFixed(2)}
+                  {formatPrice(item.price * item.quantity)}
                 </div>
               </div>
             ))}
@@ -190,7 +198,7 @@ const Checkout = () => {
           <div className="order-totals">
             <div className="total-row">
               <span>Subtotal</span>
-              <span>${totalAmount.toFixed(2)}</span>
+              <span>{formatPrice(totalAmount)}</span>
             </div>
             <div className="total-row">
               <span>Shipping</span>
@@ -198,7 +206,7 @@ const Checkout = () => {
             </div>
             <div className="total-row grand-total">
               <span>Total</span>
-              <span>${totalAmount.toFixed(2)}</span>
+              <span>{formatPrice(totalAmount)}</span>
             </div>
           </div>
         </div>

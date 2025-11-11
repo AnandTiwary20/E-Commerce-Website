@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { 
-  addItemToCart, 
-  removeItemFromCart, 
-  deleteItemFromCart, 
+  addItem, 
+  removeItem, 
+  deleteItem, 
   clearCart,
   selectCartItems,
   selectTotalQuantity,
@@ -11,33 +11,28 @@ import {
 
 export const useCart = () => {
   const dispatch = useDispatch();
-  
+
+  // Select data from store
   const items = useSelector(selectCartItems);
   const totalQuantity = useSelector(selectTotalQuantity);
   const totalAmount = useSelector(selectTotalAmount);
 
-  const addToCart = (product) => {
-    dispatch(addItemToCart({
-      id: product.id,
-      title: product.title || product.name,
-      name: product.name || product.title,
-      price: product.price || product.unitPrice || 0,
-      image: product.image || product.thumbnail,
-      thumbnail: product.thumbnail || product.image,
-      quantity: 1
-    }));
-  };
+  // Basic actions
+  const addToCart = (product) => dispatch(addItem(product));
+  const removeFromCart = (id) => dispatch(removeItem(id));
+  const deleteFromCart = (id) => dispatch(deleteItem(id));
+  const clearCartItems = () => dispatch(clearCart());
 
-  const removeFromCart = (productId) => {
-    dispatch(removeItemFromCart(productId));
-  };
+  // Update item quantity properly
+  const updateQuantity = (productId, newQuantity) => {
+    const item = items.find((i) => i.id === productId);
+    if (!item) return;
 
-  const deleteFromCart = (productId) => {
-    dispatch(deleteItemFromCart(productId));
-  };
+    const quantity = Math.max(1, newQuantity); 
 
-  const clearCartItems = () => {
-    dispatch(clearCart());
+    
+    dispatch(deleteItem(productId)); 
+    dispatch(addItem({ ...item, quantity })); 
   };
 
   return {
@@ -47,6 +42,7 @@ export const useCart = () => {
     addToCart,
     removeFromCart,
     deleteFromCart,
+    updateQuantity,
     clearCart: clearCartItems,
   };
 };

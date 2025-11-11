@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { FiTrash2 } from 'react-icons/fi';
 
-const formatPrice = (price) => `$${Number(price).toFixed(2)}`;
+const formatPrice = (price) => `₹${Number(price).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 const CartItem = React.memo(({ item, onUpdateQuantity, onRemove }) => {
   const { id, title, price, thumbnail, quantity } = item;
