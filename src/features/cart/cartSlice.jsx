@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+// Initial state for the cart slice
 const initialState = {
   items: [],
   totalQuantity: 0,
   totalAmount: 0,
 }
 
+// Helper function to calculate total price for a single item
 const getItemTotal = (price, qty) => price * qty
 
 const formatProduct = (item) => ({
@@ -17,10 +19,12 @@ const formatProduct = (item) => ({
   quantity: Math.max(1, Number(item.quantity) || 1),
 })
 
+// Create cart slice with reducers for cart operations
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
+    // Add item to cart or update quantity if item already exists
     addItem(state, { payload }) {
       const product = formatProduct(payload)
       const existing = state.items.find((i) => i.id === product.id)
@@ -39,6 +43,7 @@ const cartSlice = createSlice({
       state.totalAmount += getItemTotal(product.price, product.quantity)
     },
 
+    // Decrease item quantity by 1, remove if quantity reaches 0
     removeItem(state, { payload: id }) {
       const item = state.items.find((i) => i.id === id)
       if (!item) return
@@ -54,6 +59,7 @@ const cartSlice = createSlice({
       state.totalAmount = Math.max(0, state.totalAmount - item.price)
     },
 
+    // Completely remove an item from the cart
     deleteItem(state, { payload: id }) {
       const item = state.items.find((i) => i.id === id)
       if (!item) return
@@ -73,6 +79,7 @@ export const { addItem, removeItem, deleteItem, clearCart } = cartSlice.actions
 
 export default cartSlice.reducer
 
+// Selector functions to access cart state
 export const selectCartItems = (state) => state.cart.items
 export const selectTotalQuantity = (state) => state.cart.totalQuantity
 export const selectTotalAmount = (state) => state.cart.totalAmount
