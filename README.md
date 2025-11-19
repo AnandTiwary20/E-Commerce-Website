@@ -1,9 +1,11 @@
 Github Link -https://github.com/AnandTiwary20/E-Commerce-Website
 
 # How To run it ?
-1- Install dependencies
-2- cd @latest
-3- npm run dev
+
+1- cd @latest
+2- npm i 
+3- npm i prop-types
+4- npm run dev
 
 ----------------------------------------------------------------------------------
 
@@ -19,6 +21,9 @@ Github Link -https://github.com/AnandTiwary20/E-Commerce-Website
 - Implement routing using React Router. (✓)
 - Implement code splitting and lazy loading for components using React.lazy and
 Suspense for all the components. Implement lazy loading for images. (✓)
+- Apply CSS for styling. Ensure the application is responsive and works well on different screen sizes. (✓)
+- Add a button in each ProductItem to add the product to the cart. Add a button in each CartItem to remove the product from the cart. (✓)
+
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Modern React E-Commerce Cart
