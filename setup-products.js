@@ -12,7 +12,6 @@ async function setupDatabase() {
     await db.collection('products').deleteMany({});
     await db.collection('cart').deleteMany({});
     
-    // Real products from dummyjson (beauty products that your frontend shows)
     const products = [
       {
         id: 1,
@@ -74,6 +73,7 @@ async function setupDatabase() {
         discountPercentage: 11.44,
         rating: 4.32,
         stock: 79,
+        
         brand: 'Nail Couture',
         category: 'beauty',
         thumbnail: 'https://cdn.dummyjson.com/product-images/beauty/red-nail-polish/thumbnail.webp',
